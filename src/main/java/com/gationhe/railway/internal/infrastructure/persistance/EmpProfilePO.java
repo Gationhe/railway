@@ -2,6 +2,7 @@ package com.gationhe.railway.internal.infrastructure.persistance;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "emp_profile")
+@Table(name = "emp_profile", schema = "internal")
 public class EmpProfilePO implements Serializable {
 
     /** serialVersionUID */
@@ -33,8 +34,8 @@ public class EmpProfilePO implements Serializable {
     private String englishName;
 
     /** 身分證號 */
-    @Column(name = "id", nullable = false)
-    private String id;
+    @Column(name = "id_no", nullable = false)
+    private String idNo;
 
     /** 出生日期 */
     @Column(name = "birthday", nullable = false)
@@ -71,5 +72,13 @@ public class EmpProfilePO implements Serializable {
     /** 任職狀況 */
     @Column(name = "status", nullable = false)
     private String status;
+
+    /** 更新人員 (員工代號) */
+    @Column(name = "updated_by", nullable = false)
+    private String updatedBy;
+
+    /** 更新時間 */
+    @Column(name = "updated_at", nullable = false)
+    private OffsetDateTime updatedAt;
 
 }

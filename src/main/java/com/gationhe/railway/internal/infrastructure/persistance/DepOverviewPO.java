@@ -12,7 +12,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "dep_overview")
+@Table(name = "dep_overview", schema = "internal")
 public class DepOverviewPO implements Serializable {
 
     /** serialVersionUID */

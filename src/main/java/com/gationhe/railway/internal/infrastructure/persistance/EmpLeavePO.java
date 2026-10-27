@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @IdClass(EmpLeavePKPO.class)
-@Table(name = "emp_leave")
+@Table(name = "emp_leave", schema = "internal")
 public class EmpLeavePO implements Serializable {
 
     /** serialVersionUID */

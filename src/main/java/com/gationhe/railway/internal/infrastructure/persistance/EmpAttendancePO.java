@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @IdClass(EmpAttendancePKPO.class)
-@Table(name = "emp_attendance")
+@Table(name = "emp_attendance", schema = "internal")
 public class EmpAttendancePO implements Serializable {
 
     /** serialVersionUID */

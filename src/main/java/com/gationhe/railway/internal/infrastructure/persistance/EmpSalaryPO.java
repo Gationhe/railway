@@ -14,14 +14,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "emp_salary")
+@Table(name = "emp_salary", schema = "internal")
 public class EmpSalaryPO implements Serializable {
 
     /** serialVersionUID */
     private static final long serialVersionUID = 1L;
 
     /** 員工代號 */
-    @Id 
+    @Id
     @Column(name = "emp_id", nullable = false)
     private String empId;
 

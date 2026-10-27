@@ -15,19 +15,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @IdClass(EmpSalaryHistoryPKPO.class)
-@Table(name = "emp_salary_history")
+@Table(name = "emp_salary_history", schema = "internal")
 public class EmpSalaryHistoryPO implements Serializable {
 
     /** serialVersionUID */
     private static final long serialVersionUID = 1L;
 
     /** 員工代號 */
-    @Id 
+    @Id
     @Column(name = "emp_id", nullable = false)
     private String empId;
 
     /** 年月 */
-    @Id 
+    @Id
     @Column(name = "data_month", nullable = false)
     private String dataMonth;
 
