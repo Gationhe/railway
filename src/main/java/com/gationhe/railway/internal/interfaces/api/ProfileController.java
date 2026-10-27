@@ -13,7 +13,6 @@ import com.gationhe.railway.internal.interfaces.dto.CreateProfileResponse;
 import com.gationhe.railway.shared.dto.Req;
 import com.gationhe.railway.shared.dto.Resp;
 import com.gationhe.railway.shared.dto.RespInfo;
-import com.gationhe.railway.shared.enums.ReturnCodeAndDescEnum;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,8 +36,7 @@ public class ProfileController {
             @RequestBody Req<CreateProfileRequest> request,
             @RequestHeader(value = "X-OperatorId", required = true) String operatorId) {
         return new Resp<CreateProfileResponse>(
-                new RespInfo(true, ReturnCodeAndDescEnum.SUCCESS.getCode(), ReturnCodeAndDescEnum.SUCCESS.getDesc(),
-                        null),
+                RespInfo.successRespInfo(),
                 ProfileAssembler.toCreateProfileResponse(profileApplicationService.createProfile(
                 ProfileAssembler.toCreateProfileCommand(request.getTranrq()), operatorId)));
     }
