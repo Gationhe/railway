@@ -118,6 +118,37 @@ public class EmpProfileAggregate {
                 now);
     }
 
+    public void update(
+            String name,
+            String englishName,
+            String idNo,
+            LocalDate birthday,
+            String phone,
+            String tel,
+            String emergencyContact,
+            String depNo,
+            String position,
+            LocalDate employmentDate,
+            LocalDate terminationDate,
+            String status,
+            String operatorId,
+            OffsetDateTime now) {
+        this.name = name;
+        this.englishName = englishName;
+        this.idNo = idNo;
+        this.birthday = birthday;
+        this.phone = phone;
+        this.tel = tel;
+        this.emergencyContact = emergencyContact;
+        this.depNo = depNo;
+        this.position = position;
+        this.employmentDate = employmentDate;
+        this.terminationDate = terminationDate;
+        this.status = status;
+        this.updatedBy = operatorId;
+        this.updatedAt = now;
+    }
+
     public static EmpProfileAggregate restore(
             String empId,
             String name,

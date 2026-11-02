@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gationhe.railway.internal.application.command.CreateProfileCommand;
-import com.gationhe.railway.internal.application.result.CreateProfileResult;
+import com.gationhe.railway.internal.application.command.UpdateProfileCommand;
+import com.gationhe.railway.internal.application.result.ProfileResult;
 import com.gationhe.railway.internal.domain.aggregate.EmpProfileAggregate;
 import com.gationhe.railway.internal.domain.factory.EmpProfileFactory;
 import com.gationhe.railway.internal.domain.repository.EmpProfileRepository;
+import com.gationhe.railway.shared.exception.DataNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +31,7 @@ public class ProfileApplicationService {
      * @return 建立員工基本資料結果
      */
     @Transactional(rollbackFor = Exception.class)
-    public CreateProfileResult createProfile(CreateProfileCommand command, String operatorId) {
+    public ProfileResult createProfile(CreateProfileCommand command, String operatorId) {
         EmpProfileAggregate profile = EmpProfileAggregate.create(
                 empProfileFactory.getAvailableEmpId(),
                 command.name(),
@@ -45,6 +47,52 @@ public class ProfileApplicationService {
                 operatorId,
                 OffsetDateTime.now());
 
-        return CreateProfileResult.from(empProfileRepository.save(profile));
+        return ProfileResult.from(empProfileRepository.save(profile));
+    }
+
+    /**
+     * 更新員工基本資料
+     * 
+     * @param command    更新員工基本資料命令
+     * @param operatorId 操作人員員工編號
+     * @return 更新員工基本資料結果
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ProfileResult updateProfile(UpdateProfileCommand command, String operatorId) {
+        EmpProfileAggregate profile = empProfileRepository.findByEmpId(command.empId())
+                .orElseThrow(() -> new DataNotFoundException("查無員工基本資料，員工代號為：" + command.empId()));
+
+        empProfileRepository.saveLog(profile, "U");
+
+        profile.update(
+                command.name(),
+                command.englishName(),
+                command.idNo(),
+                command.birthday(),
+                command.phone(),
+                command.tel(),
+                command.emergencyContact(),
+                command.depNo(),
+                command.position(),
+                command.employmentDate(),
+                command.terminationDate(),
+                command.status(),
+                operatorId,
+                OffsetDateTime.now());
+
+        return ProfileResult.from(empProfileRepository.save(profile));
+    }
+
+    /**
+     * 查詢單筆員工基本資料
+     * 
+     * @param empId 員工代號
+     * @return 查詢員工基本資料結果
+     */
+    @Transactional(readOnly = true)
+    public ProfileResult getProfile(String empId) {
+        return empProfileRepository.findByEmpId(empId)
+                .map(ProfileResult::from)
+                .orElseThrow(() -> new DataNotFoundException("查無員工基本資料，員工代號為：" + empId));
     }
 }
