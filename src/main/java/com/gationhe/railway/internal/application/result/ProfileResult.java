@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 
 import com.gationhe.railway.internal.domain.aggregate.EmpProfileAggregate;
 
-public record CreateProfileResult(
+public record ProfileResult(
         String empId,
         String name,
         String englishName,
@@ -22,11 +22,11 @@ public record CreateProfileResult(
         String updatedBy,
         OffsetDateTime updatedAt) {
 
-    public static CreateProfileResult from(EmpProfileAggregate profile) {
+    public static ProfileResult from(EmpProfileAggregate profile) {
         if (profile == null) {
             return null;
         }
-        return new CreateProfileResult(
+        return new ProfileResult(
                 profile.getEmpId(),
                 profile.getName(),
                 profile.getEnglishName(),

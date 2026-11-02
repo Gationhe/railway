@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 import com.gationhe.railway.internal.domain.aggregate.EmpProfileAggregate;
+import com.gationhe.railway.internal.infrastructure.persistance.EmpProfileLogPO;
 import com.gationhe.railway.internal.infrastructure.persistance.EmpProfilePO;
 import com.gationhe.railway.shared.exception.DataMappingException;
 
@@ -33,6 +34,34 @@ public final class EmpProfileMapper {
             return po;
         } catch (RuntimeException e) {
             throw new DataMappingException("轉換員工基本資料至持久化物件失敗", e);
+        }
+    }
+
+    public static EmpProfileLogPO toLogPO(EmpProfileAggregate aggregate, String mod) {
+        if (aggregate == null) {
+            return null;
+        }
+        try {
+            EmpProfileLogPO po = new EmpProfileLogPO();
+            po.setEmpId(aggregate.getEmpId());
+            po.setName(aggregate.getName());
+            po.setEnglishName(aggregate.getEnglishName());
+            po.setIdNo(aggregate.getIdNo());
+            po.setBirthday(toSqlDate(aggregate.getBirthday()));
+            po.setPhone(aggregate.getPhone());
+            po.setTel(aggregate.getTel());
+            po.setEmergencyContact(aggregate.getEmergencyContact());
+            po.setDepNo(aggregate.getDepNo());
+            po.setPosition(aggregate.getPosition());
+            po.setEmploymentDate(toSqlDate(aggregate.getEmploymentDate()));
+            po.setTerminationDate(toSqlDate(aggregate.getTerminationDate()));
+            po.setStatus(aggregate.getStatus());
+            po.setUpdatedBy(aggregate.getUpdatedBy());
+            po.setUpdatedAt(aggregate.getUpdatedAt());
+            po.setMod(mod);
+            return po;
+        } catch (RuntimeException e) {
+            throw new DataMappingException("轉換員工基本資料至異動紀錄持久化物件失敗", e);
         }
     }
 
