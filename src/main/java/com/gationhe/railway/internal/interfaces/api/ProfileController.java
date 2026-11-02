@@ -1,5 +1,7 @@
 package com.gationhe.railway.internal.interfaces.api;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -57,5 +59,18 @@ public class ProfileController {
                 RespInfo.successRespInfo(),
                 ProfileAssembler.toProfileResponse(profileApplicationService.updateProfile(
                         ProfileAssembler.toUpdateProfileCommand(request.getTranrq()), operatorId)));
+    }
+
+    /**
+     * 查詢單筆員工基本資料
+     * 
+     * @param empId 員工代號
+     * @return
+     */
+    @GetMapping("/{empId}")
+    public Resp<ProfileResponse> getProfile(@PathVariable("empId") String empId) {
+        return new Resp<ProfileResponse>(
+                RespInfo.successRespInfo(),
+                ProfileAssembler.toProfileResponse(profileApplicationService.getProfile(empId)));
     }
 }

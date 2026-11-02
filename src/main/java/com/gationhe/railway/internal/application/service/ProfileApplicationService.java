@@ -82,4 +82,17 @@ public class ProfileApplicationService {
 
         return ProfileResult.from(empProfileRepository.save(profile));
     }
+
+    /**
+     * 查詢單筆員工基本資料
+     * 
+     * @param empId 員工代號
+     * @return 查詢員工基本資料結果
+     */
+    @Transactional(readOnly = true)
+    public ProfileResult getProfile(String empId) {
+        return empProfileRepository.findByEmpId(empId)
+                .map(ProfileResult::from)
+                .orElseThrow(() -> new DataNotFoundException("查無員工基本資料，員工代號為：" + empId));
+    }
 }
