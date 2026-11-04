@@ -1,16 +1,19 @@
 package com.gationhe.railway.internal.application.service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gationhe.railway.internal.application.command.CreateProfileCommand;
+import com.gationhe.railway.internal.application.command.SearchProfileCommand;
 import com.gationhe.railway.internal.application.command.UpdateProfileCommand;
 import com.gationhe.railway.internal.application.result.ProfileResult;
 import com.gationhe.railway.internal.domain.aggregate.EmpProfileAggregate;
 import com.gationhe.railway.internal.domain.factory.EmpProfileFactory;
 import com.gationhe.railway.internal.domain.repository.EmpProfileRepository;
+import com.gationhe.railway.internal.domain.vo.EmpProfileSearchCriteria;
 import com.gationhe.railway.shared.exception.DataNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -94,5 +97,27 @@ public class ProfileApplicationService {
         return empProfileRepository.findByEmpId(empId)
                 .map(ProfileResult::from)
                 .orElseThrow(() -> new DataNotFoundException("查無員工基本資料，員工代號為：" + empId));
+    }
+
+    /**
+     * 條件查詢多筆員工基本資料
+     * 
+     * @param command 查詢條件
+     * @return 符合條件的員工基本資料列表
+     */
+    @Transactional(readOnly = true)
+    public List<ProfileResult> searchProfiles(SearchProfileCommand command) {
+        SearchProfileCommand searchCommand = command == null ? SearchProfileCommand.empty() : command;
+
+        return empProfileRepository.search(new EmpProfileSearchCriteria(
+                searchCommand.empId(),
+                searchCommand.name(),
+                searchCommand.englishName(),
+                searchCommand.idNo(),
+                searchCommand.depNoList(),
+                searchCommand.positionList(),
+                searchCommand.statusList())).stream()
+                .map(ProfileResult::from)
+                .toList();
     }
 }

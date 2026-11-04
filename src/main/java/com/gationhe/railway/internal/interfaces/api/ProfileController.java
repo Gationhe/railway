@@ -1,5 +1,7 @@
 package com.gationhe.railway.internal.interfaces.api;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,11 +14,13 @@ import com.gationhe.railway.internal.application.service.ProfileApplicationServi
 import com.gationhe.railway.internal.interfaces.assembler.ProfileAssembler;
 import com.gationhe.railway.internal.interfaces.dto.CreateProfileRequest;
 import com.gationhe.railway.internal.interfaces.dto.ProfileResponse;
+import com.gationhe.railway.internal.interfaces.dto.SearchProfileRequest;
 import com.gationhe.railway.internal.interfaces.dto.UpdateProfileRequest;
 import com.gationhe.railway.shared.dto.Req;
 import com.gationhe.railway.shared.dto.Resp;
 import com.gationhe.railway.shared.dto.RespInfo;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -36,7 +40,7 @@ public class ProfileController {
      */
     @PostMapping("/create")
     public Resp<ProfileResponse> createProfile(
-            @RequestBody Req<CreateProfileRequest> request,
+            @Valid @RequestBody Req<CreateProfileRequest> request,
             @RequestHeader(value = "X-OperatorId", required = true) String operatorId) {
         return new Resp<ProfileResponse>(
                 RespInfo.successRespInfo(),
@@ -53,12 +57,27 @@ public class ProfileController {
      */
     @PostMapping("/update")
     public Resp<ProfileResponse> updateProfile(
-            @RequestBody Req<UpdateProfileRequest> request,
+            @Valid @RequestBody Req<UpdateProfileRequest> request,
             @RequestHeader(value = "X-OperatorId", required = true) String operatorId) {
         return new Resp<ProfileResponse>(
                 RespInfo.successRespInfo(),
                 ProfileAssembler.toProfileResponse(profileApplicationService.updateProfile(
                         ProfileAssembler.toUpdateProfileCommand(request.getTranrq()), operatorId)));
+    }
+
+    /**
+     * 條件查詢多筆員工基本資料
+     * 
+     * @param request 請求資料
+     * @return 符合條件的員工基本資料列表
+     */
+    @PostMapping("/search")
+    public Resp<List<ProfileResponse>> searchProfiles(
+            @Valid @RequestBody Req<SearchProfileRequest> request) {
+        return new Resp<List<ProfileResponse>>(
+                RespInfo.successRespInfo(),
+                ProfileAssembler.toProfileResponses(profileApplicationService.searchProfiles(
+                        ProfileAssembler.toSearchProfileCommand(request.getTranrq()))));
     }
 
     /**
